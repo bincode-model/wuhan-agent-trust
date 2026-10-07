@@ -1,0 +1,28 @@
+{
+  "name": "wuhan-agent-trust",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5201 --strictPort",
+    "lint": "oxlint src --deny-warnings",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build --base=/agent-trust/ && node scripts/compress.mjs",
+    "test": "python3 -m unittest discover -s tests -v && node --experimental-strip-types --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.24.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "oxlint": "^1.27.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.5"
+  }
+}
