@@ -1,0 +1,14 @@
+.liquid-lens {
+  position: absolute !important;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: filter 1.3s, opacity .2s;
+}
+.liquid-lens[data-lens-ready="true"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .liquid-lens { transition: none; } }
+@media print { .liquid-lens { display: none !important; } }

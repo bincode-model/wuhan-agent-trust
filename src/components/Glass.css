@@ -1,0 +1,47 @@
+.glass-filter-defs { position: absolute; pointer-events: none; }
+[data-frosted="true"] { --glass-neutral-surface: rgb(198 192 188 / .16); }
+[data-flat="true"] { --glass-neutral-surface: rgb(105 107 112 / .64); }
+.glass-surface {
+  --light-x: 22%; --light-y: 0%;
+  position: relative;
+  border: 1px solid rgb(255 255 255 / .33);
+  border-top-color: rgb(255 255 255 / .6);
+  border-bottom-color: rgb(255 255 255 / .17);
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgb(255 255 255 / .19), rgb(255 255 255 / .045) 45%, rgb(222 229 244 / .12));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) saturate(1.35);
+  backdrop-filter: blur(var(--glass-blur, 20px)) saturate(1.35);
+  box-shadow: inset 1px 1px 1px rgb(255 255 255 / .35), inset -1px -1px 1px rgb(255 255 255 / .13), 0 12px 30px -16px rgb(18 19 29 / .4), 0 1px 3px rgb(15 15 20 / .12);
+}
+.glass-surface::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(ellipse at var(--light-x) var(--light-y), rgb(255 255 255 / .23), transparent 57%);
+  opacity: .7; transition: opacity .25s;
+}
+.glass-edge {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  padding: 7px;
+  background: linear-gradient(135deg, rgb(255 255 255 / .14), transparent 32%, rgb(255 255 255 / .07) 65%, rgb(255 255 255 / .24));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+[data-refraction="true"] .glass-edge {
+  -webkit-backdrop-filter: url('#glass-edge-refraction');
+  backdrop-filter: url('#glass-edge-refraction');
+}
+.glass-button { cursor: pointer; color: inherit; font: inherit; transition: background .2s, box-shadow .2s, transform .25s; }
+.glass-button:hover { background-color: rgb(255 255 255 / .12); }
+.glass-button:active { transform: scale(.95); }
+.glass-button:disabled { opacity: .5; cursor: not-allowed; }
+.glass-button:hover::before { opacity: 1; }
+[data-frosted="true"] .glass-surface { --glass-blur: 34px; background-color: rgb(198 192 188 / .16); }
+[data-flat="true"] .glass-surface { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-neutral-surface); }
+[data-flat="true"] .glass-edge { -webkit-backdrop-filter: none; backdrop-filter: none; }
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-surface { background-color: rgb(72 73 82 / .84); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-button { transition: none; }
+  .glass-button:active { transform: none; }
+}
