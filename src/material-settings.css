@@ -1,0 +1,45 @@
+/* The settings surface is independent of clear/frosted/solid. Text is never blurred. */
+.lab .material-dialog {
+  position: fixed;
+  inset: 24px max(24px, 4.3vw) 24px auto;
+  margin: auto 0;
+  width: 380px;
+  max-width: calc(100vw - 28px);
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / .3);
+  border-top-color: rgb(255 255 255 / .5);
+  border-radius: 28px;
+  color: #fff;
+  background: linear-gradient(145deg, rgb(74 78 89 / .9), rgb(27 32 43 / .94));
+  -webkit-backdrop-filter: blur(36px) saturate(1.1);
+  backdrop-filter: blur(36px) saturate(1.1);
+  box-shadow: inset 0 1px 1px #ffffff38, 0 24px 90px #0008;
+}
+.lab .material-dialog[open] { display: flex; animation: material-panel-enter .2s ease-out; }
+.lab .material-dialog::backdrop { background: rgb(13 17 25 / .14); }
+.lab .material-dialog .settings-panel { display: flex; flex-direction: column; width: 100%; min-height: 0; padding: 0; background: transparent; }
+.lab .material-dialog .settings-heading {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 17px 19px 13px 23px;
+  border-bottom: 1px solid #ffffff20;
+  background: rgb(255 255 255 / .04);
+}
+.lab .material-dialog .settings-heading h2 { display: flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 550; margin: 0; }
+.lab .material-dialog .settings-heading button { width: 38px; height: 38px; border: 1px solid #ffffff26; border-radius: 50%; background: #ffffff0c; }
+.lab .material-dialog .settings-scroll { min-height: 0; padding: 20px 24px 24px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #ffffff50 transparent; }
+.lab .material-dialog .settings-group-label { margin-bottom: 11px; font-size: 11px; color: #ced4df; }
+.lab .material-dialog .refraction-control { margin-top: 18px; }
+.lab .material-dialog .refraction-control small { color: #c4cbd8; opacity: 1; line-height: 1.6; }
+.lab .material-dialog .settings-note { color: #c4cbd8; font-size: 11px; line-height: 1.75; margin: 19px 0 0; }
+@keyframes material-panel-enter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+@supports not (backdrop-filter: blur(1px)) { .lab .material-dialog { background: #303541; } }
+@media (max-width: 760px) {
+  .lab .material-dialog { inset: 14px; margin: auto; max-height: calc(100dvh - 28px); }
+}
+@media (max-width: 380px) {
+  .lab .material-dialog .settings-scroll { padding: 17px 19px 21px; }
+}
+@media (prefers-reduced-motion: reduce) { .lab .material-dialog[open] { animation: none; } }

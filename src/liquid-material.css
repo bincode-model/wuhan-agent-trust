@@ -1,0 +1,249 @@
+/* The existing interface shares one optical material. Canvas is background-only;
+   labels, icons, range fills and interactive controls keep independent layers.
+   Import after styles.css. The material settings dialog is intentionally excluded. */
+.lab[data-liquid-glass='true'] {
+  --liquid-density-tint: rgb(255 255 255 / .018);
+  --liquid-density-blur: 0px;
+  --liquid-fallback-blur: 3px;
+}
+.lab[data-liquid-glass='true'][data-frosted='true'] {
+  --liquid-density-tint: rgb(219 225 235 / .14);
+  --liquid-density-blur: 14px;
+  --liquid-fallback-blur: 18px;
+}
+.lab[data-liquid-glass='true'][data-flat='true'] {
+  --liquid-density-tint: rgb(83 89 103 / .34);
+  --liquid-density-blur: 3px;
+  --liquid-fallback-blur: 7px;
+}
+
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true']:not(.material-dialog, .material-dialog *) {
+  --liquid-state-tint: linear-gradient(transparent, transparent);
+  --liquid-depth-tint: rgb(16 22 31 / .025);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / .23);
+  border-top-color: rgb(255 255 255 / .53);
+  border-bottom-color: rgb(255 255 255 / .31);
+  -webkit-backdrop-filter: blur(var(--liquid-fallback-blur)) saturate(1.08);
+  backdrop-filter: blur(var(--liquid-fallback-blur)) saturate(1.08);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / .17), inset 0 -1px 1px rgb(255 255 255 / .08), 0 14px 30px -23px rgb(7 12 22 / .54);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true']:not(.material-dialog, .material-dialog *)::before {
+  z-index: 1;
+  background: radial-gradient(ellipse at var(--light-x, 22%) var(--light-y, 0%), rgb(255 255 255 / .13), transparent 62%);
+  opacity: .65;
+  pointer-events: none;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true']:not(.material-dialog, .material-dialog *)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: var(--liquid-state-tint), linear-gradient(var(--liquid-depth-tint), var(--liquid-depth-tint)), linear-gradient(var(--liquid-density-tint), var(--liquid-density-tint));
+  -webkit-backdrop-filter: blur(var(--liquid-density-blur));
+  backdrop-filter: blur(var(--liquid-density-blur));
+  pointer-events: none;
+  transition: background .22s;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true']:not(.material-dialog, .material-dialog *) > .liquid-lens {
+  position: absolute !important;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true']:not(.material-dialog, .material-dialog *) > :not(.liquid-lens, .glass-edge) {
+  position: relative;
+  z-index: 2;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true']:not(.material-dialog, .material-dialog *) > .glass-edge {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  padding: 1.25px;
+  background: linear-gradient(160deg, rgb(255 255 255 / .47), rgb(255 255 255 / .06) 27%, transparent 44%, rgb(255 255 255 / .05) 68%, rgb(255 255 255 / .35));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  pointer-events: none;
+}
+
+/* Dark appearance remains a light tint over the sampled wallpaper. */
+.lab[data-liquid-glass='true'] .cc-control-center--dark .glass-surface[data-liquid-surface='true'],
+.lab[data-liquid-glass='true'] .cc-control-center--dark.glass-surface[data-liquid-surface='true'] {
+  --liquid-depth-tint: rgb(10 17 29 / .105);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].control-glass-frame {
+  width: calc(100% + 32px);
+  max-width: none;
+  margin-left: -16px;
+  padding: 16px;
+  border-radius: 40px;
+  --liquid-depth-tint: rgb(12 20 32 / .025);
+}
+.lab[data-liquid-glass='true'] .cc-control-center .glass-surface[data-liquid-surface='true']:is(.cc-tile, .cc-focus, .cc-tool, .cc-range, .cc-detail) {
+  background: transparent;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-radio {
+  --liquid-depth-tint: rgb(12 19 28 / .045);
+  color: rgb(255 255 255 / .95);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / .2), 0 5px 12px -8px rgb(0 0 0 / .34);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-radio--on.cc-radio--blue {
+  --liquid-state-tint: linear-gradient(145deg, rgb(52 161 242 / .46), rgb(9 108 225 / .38));
+  border-top-color: rgb(206 240 255 / .68);
+  box-shadow: inset 0 1px 1px rgb(222 245 255 / .28), 0 4px 16px -9px rgb(44 160 255 / .4);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-radio--on.cc-radio--green {
+  --liquid-state-tint: linear-gradient(145deg, rgb(96 221 136 / .42), rgb(28 167 81 / .37));
+  border-top-color: rgb(223 255 233 / .67);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-radio--on.cc-radio--amber {
+  --liquid-state-tint: linear-gradient(145deg, rgb(255 191 110 / .44), rgb(236 140 54 / .34));
+  border-top-color: rgb(255 232 197 / .72);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].is-liked {
+  --liquid-state-tint: linear-gradient(145deg, rgb(255 160 190 / .25), rgb(236 107 151 / .17));
+  color: #ffdde9;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].is-selected {
+  --liquid-state-tint: linear-gradient(145deg, rgb(210 231 255 / .15), rgb(164 204 248 / .08));
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-focus--on {
+  --liquid-state-tint: linear-gradient(150deg, rgb(208 195 255 / .21), rgb(155 147 235 / .09));
+}
+.lab[data-liquid-glass='true'] .cc-focus-orb {
+  background: rgb(255 255 255 / .055);
+  border: 1px solid rgb(255 255 255 / .18);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / .16);
+}
+.lab[data-liquid-glass='true'] .cc-focus--on .cc-focus-orb {
+  color: #f1eaff;
+  background: rgb(231 220 255 / .2);
+  border-color: rgb(244 237 255 / .45);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-tool--lit {
+  --liquid-state-tint: linear-gradient(155deg, rgb(255 235 175 / .23), rgb(230 183 94 / .11));
+  color: #fff1c7;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-tool--recording {
+  --liquid-state-tint: linear-gradient(155deg, rgb(255 154 178 / .23), rgb(235 97 131 / .14));
+  color: #ffdae4;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-tool--dark {
+  --liquid-state-tint: linear-gradient(155deg, rgb(16 25 42 / .16), rgb(19 30 48 / .08));
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-play {
+  --liquid-state-tint: linear-gradient(145deg, rgb(255 255 255 / .27), rgb(236 246 255 / .13));
+  --liquid-depth-tint: transparent;
+  color: #fff;
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / .33), 0 5px 12px -8px rgb(0 0 0 / .34);
+}
+.lab[data-liquid-glass='true'] .cc-play > svg { filter: drop-shadow(0 1px 2px rgb(12 20 30 / .35)); }
+
+/* Keep vertical range layers absolute. Raising only their paint order avoids
+   changing their original geometry, level height or native hit target. */
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-range > :is(.cc-range-fill, .cc-range-value, .cc-range-caption, input) { position: absolute; }
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-range > .cc-range-fill {
+  z-index: 2;
+  background: linear-gradient(0deg, rgb(250 253 255 / .46), rgb(245 250 255 / .3));
+  box-shadow: 0 -1px 0 rgb(255 255 255 / .47);
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-range--brightness > .cc-range-fill { background: linear-gradient(0deg, rgb(255 251 235 / .47), rgb(255 254 247 / .31)); }
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-range > :is(.cc-range-value, .cc-range-caption) {
+  z-index: 3;
+  color: #fff;
+  mix-blend-mode: normal;
+  text-shadow: 0 1px 4px rgb(18 26 39 / .65);
+}
+.lab[data-liquid-glass='true'] .cc-range-caption > svg { filter: drop-shadow(0 1px 2px rgb(18 26 39 / .3)); }
+.lab[data-liquid-glass='true'] .cc-range--brightness .cc-range-caption > svg { color: #fff4d4; }
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-range > input { z-index: 5; }
+
+/* Smaller native controls still use the same transparent edge language. */
+.lab[data-liquid-glass='true'] :is(.cc-detail-trigger, .cc-close, .cc-skip) {
+  background: rgb(255 255 255 / .055);
+  border: 1px solid rgb(255 255 255 / .22);
+  border-top-color: rgb(255 255 255 / .42);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / .1);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.lab[data-liquid-glass='true'] .cc-connection-row { background: rgb(255 255 255 / .025); border-color: rgb(255 255 255 / .2); border-top-color: rgb(255 255 255 / .35); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.lab[data-liquid-glass='true'] .cc-connection-icon { background: rgb(255 255 255 / .07); border: 1px solid rgb(255 255 255 / .2); box-shadow: inset 0 1px 1px rgb(255 255 255 / .18); }
+.lab[data-liquid-glass='true'] .cc-connection-icon.cc-radio--on.cc-radio--blue { background: linear-gradient(145deg, rgb(52 161 242 / .42), rgb(9 108 225 / .32)); }
+.lab[data-liquid-glass='true'] .cc-connection-icon.cc-radio--on.cc-radio--green { background: linear-gradient(145deg, rgb(96 221 136 / .38), rgb(28 167 81 / .32)); }
+.lab[data-liquid-glass='true'] .cc-connection-icon.cc-radio--on.cc-radio--amber { background: linear-gradient(145deg, rgb(255 191 110 / .4), rgb(236 140 54 / .29)); }
+.lab[data-liquid-glass='true'] .cc-switch { background: rgb(255 255 255 / .06); border-color: rgb(255 255 255 / .25); }
+.lab[data-liquid-glass='true'] .cc-switch--on { background: rgb(207 233 255 / .26); }
+.lab[data-liquid-glass='true'] .cc-switch > i { background: rgb(255 255 255 / .82); }
+
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].search-results {
+  position: absolute;
+  --liquid-depth-tint: rgb(13 22 36 / .27);
+  --liquid-density-blur: 12px;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].toast {
+  --liquid-depth-tint: rgb(13 22 36 / .21);
+  --liquid-density-blur: 8px;
+}
+.lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true'].cc-detail {
+  --liquid-depth-tint: rgb(13 22 36 / .13);
+  --liquid-density-blur: 3px;
+}
+.lab[data-liquid-glass='true'] .cc-control-center--dark .glass-surface[data-liquid-surface='true'].cc-detail { --liquid-depth-tint: rgb(9 17 31 / .24); }
+.lab[data-liquid-glass='true'] :is(.search-glass, .touch-orb, .explore-pill, .reference-button) { text-shadow: 0 1px 4px rgb(13 19 29 / .28); }
+.lab[data-liquid-glass='true'] :is(.cc-radio-label, .cc-tile-heading, .cc-tool > span:not(.glass-edge, .cc-record-icon)) { color: rgb(255 255 255 / .9); }
+.lab[data-liquid-glass='true'] :is(.cc-radio-state, .cc-focus-state, .cc-track-subtitle, .cc-detail-note, .cc-connection-copy > span, .cc-detail-footnote) { color: rgb(240 244 250 / .74); }
+
+/* The island keeps a near-black body in every material mode. Its state machine
+   and spring transitions remain independent of the page's transparent lenses. */
+.lab[data-liquid-glass='true'] .island-shell {
+  background: linear-gradient(155deg, #121316, #08090b 44%, #030405);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-color: rgb(255 255 255 / .13);
+  border-top-color: rgb(255 255 255 / .22);
+  border-bottom-color: rgb(255 255 255 / .1);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / .08), 0 13px 28px -14px rgb(8 14 25 / .38);
+}
+.lab[data-liquid-glass='true'] .island-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1.25px;
+  border-radius: inherit;
+  background: linear-gradient(155deg, rgb(255 255 255 / .18), transparent 34%, transparent 61%, rgb(255 255 255 / .08));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.lab[data-liquid-glass='true'] :is(.island-mini-art, .island-task-art) { background: linear-gradient(145deg, rgb(196 226 247 / .17), rgb(121 173 211 / .055)); border: 1px solid rgb(233 245 255 / .26); color: #e2f3ff; box-shadow: inset 0 1px 1px rgb(255 255 255 / .16); }
+.lab[data-liquid-glass='true'] :is(.island-mini-art--success, .island-task-art--success) { background: linear-gradient(145deg, rgb(161 243 200 / .2), rgb(85 169 128 / .08)); color: #ddffed; }
+.lab[data-liquid-glass='true'] :is(.island-mini-art--error, .island-task-art--error) { background: linear-gradient(145deg, rgb(255 192 173 / .2), rgb(212 129 103 / .075)); color: #ffe3d9; }
+.lab[data-liquid-glass='true'] :is(.island-trigger-subtitle, .island-collapse-icon, .island-task-copy p, .island-progress-row, .island-result-row, .island-disclaimer) { color: rgb(239 244 251 / .75); }
+.lab[data-liquid-glass='true'] .island-progress-track { background: rgb(255 255 255 / .13); }
+.lab[data-liquid-glass='true'] .island-result-options { background: rgb(255 255 255 / .045); border: 1px solid rgb(255 255 255 / .14); }
+.lab[data-liquid-glass='true'] .island-result-options > button { color: rgb(240 245 251 / .73); }
+.lab[data-liquid-glass='true'] .island-result-options > button[aria-pressed='true'] { background: rgb(226 239 255 / .16); color: #fff; box-shadow: inset 0 1px 0 rgb(255 255 255 / .24); }
+.lab[data-liquid-glass='true'] .island-action { color: #fff; border: 1px solid rgb(255 255 255 / .26); border-top-color: rgb(255 255 255 / .45); box-shadow: inset 0 1px 0 rgb(255 255 255 / .13); }
+.lab[data-liquid-glass='true'] .island-action--primary { background: linear-gradient(135deg, rgb(225 239 255 / .23), rgb(212 231 252 / .1)); }
+.lab[data-liquid-glass='true'] .island-action--cancel { background: rgb(255 255 255 / .065); }
+.lab[data-liquid-glass='true'] .island-shell > :is(.island-trigger, .island-panel) { position: relative; z-index: 2; }
+
+@media (hover: hover) {
+  .lab[data-liquid-glass='true'] .glass-button[data-liquid-surface='true']:not(.material-dialog, .material-dialog *):hover { background: transparent; border-top-color: rgb(255 255 255 / .82); }
+  .lab[data-liquid-glass='true'] .cc-connection-row:hover { background: rgb(255 255 255 / .065); }
+  .lab[data-liquid-glass='true'] .island-action:hover { background-color: rgb(240 246 255 / .14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lab[data-liquid-glass='true'] .glass-surface[data-liquid-surface='true']::after { transition: none; }
+}
