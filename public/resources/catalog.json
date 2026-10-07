@@ -1,0 +1,339 @@
+{
+  "project": "江城验真",
+  "version": "1.0.0",
+  "topic": "Agent公共信誉与服务验收",
+  "positioning": "从服务探测、交付验收到可共享履约证据；本实例观测，不冒称全球信誉。",
+  "providers": [
+    {
+      "id": "publicnode",
+      "name": "Ethereum PublicNode",
+      "url": "https://ethereum-rpc.publicnode.com",
+      "enabled": true
+    },
+    {
+      "id": "llama",
+      "name": "LlamaRPC Ethereum",
+      "url": "https://eth.llamarpc.com",
+      "enabled": false,
+      "disabled_reason": "来源站证书异常，待核验；不参与真实自动选择"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "ETH-READ-SERVICE",
+      "version": "1.0.0",
+      "name": "以太坊只读数据服务验收",
+      "chain_id": 1,
+      "block_tag": "finalized",
+      "max_age_seconds": 1800,
+      "sample_limit": 3,
+      "max_latency_ms": 16000,
+      "required_receipt_fields": [
+        "transactionHash",
+        "blockHash",
+        "blockNumber",
+        "status"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "TRUST-001",
+      "name": "服务目录与身份边界",
+      "agent_id": "AG-01",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "把固定端点、版本与公开能力声明列在一起，避免把登记等同于能力。",
+      "inputs": "固定提供商目录",
+      "outputs": "版本化服务目录",
+      "metric": "启用端点全部来自allowlist；未知端点拒绝率100%",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-002",
+      "name": "服务可用性探测",
+      "agent_id": "AG-01",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "执行真实只读RPC，记录成功响应或具体失败，不用模拟代替。",
+      "inputs": "固定RPC与只读方法",
+      "outputs": "可用性观测",
+      "metric": "每个请求有成功或明确失败结果；静默模拟替代次数0",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-003",
+      "name": "响应耗时记录",
+      "agent_id": "AG-01",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "测量本次采集耗时，与16000ms示例交付标准比较。",
+      "inputs": "单调时钟",
+      "outputs": "毫秒计时记录",
+      "metric": "采集耗时≤16000ms；不将单次结果外推为SLA",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-004",
+      "name": "链身份与快照时效",
+      "agent_id": "AG-02",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "核对chainId=1、finalized标签与区块年龄，拒绝错链、过期与未来快照。",
+      "inputs": "区块快照",
+      "outputs": "网络与时效检查",
+      "metric": "chainId=1；区块年龄-30—1800秒",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-005",
+      "name": "结构化交付验收",
+      "agent_id": "AG-02",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "检查区块、抽样交易与回执字段和数量；缺项保持拒绝。",
+      "inputs": "最多3笔交易及回执",
+      "outputs": "完整性检查",
+      "metric": "回执覆盖100%；每笔status为0或1",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-006",
+      "name": "交易回执关联核验",
+      "agent_id": "AG-02",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "逐条对齐交易、回执与所属区块，识别重复和错配。",
+      "inputs": "hash与blockNumber",
+      "outputs": "关联一致性结果",
+      "metric": "抽样关联一致100%；重复交易0",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-007",
+      "name": "按约定选择服务",
+      "agent_id": "AG-03",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "auto仅在已核验启用列表顺序探测，首个全部通过服务被选择。",
+      "inputs": "提供商顺序与逐项检查",
+      "outputs": "选择或拒绝理由",
+      "metric": "有失败检查的服务被选择次数0；无可用服务明确拒绝",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-008",
+      "name": "持久履约观测去重",
+      "agent_id": "AG-03",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "保存本实例真实观测；同快照同验收结果去重，过期或超时导致的新拒收另行留档，模拟不入账。",
+      "inputs": "实时观测与稳定证据摘要",
+      "outputs": "去重SQLite记录",
+      "metric": "相同provider+snapshot+ruleversion+判定及失败项仅1条；通过转拒收保留2条；模拟入账0",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-009",
+      "name": "样本与分母披露",
+      "agent_id": "AG-03",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "展示通过、拒绝和样本数，缺样本保持空白，不伪造公共排名。",
+      "inputs": "已去重观测记录",
+      "outputs": "可复核服务统计",
+      "metric": "通过+拒绝=样本总数；统计仅限本实例",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-010",
+      "name": "共享证据包",
+      "agent_id": "AG-04",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "将来源、契约、时间、检查及限制封装为可下载JSON。",
+      "inputs": "本次交付与检查",
+      "outputs": "SHA-256证据包",
+      "metric": "每包包含规则版本、采集时点与来源；不暴露密钥和业务数据",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-011",
+      "name": "离线重放核验",
+      "agent_id": "AG-04",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "重算摘要并用冻结规则重放，拒绝只修改结果或规则的回执。",
+      "inputs": "导入JSON证据包",
+      "outputs": "内容一致性核验",
+      "metric": "原包通过、篡改包拒绝；无外网请求；不验证真实身份",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    },
+    {
+      "id": "TRUST-012",
+      "name": "失效与缺项试验",
+      "agent_id": "AG-04",
+      "pain": "服务自报完成无法直接作为可信履约依据",
+      "task": "使用明确合成数据测试健康、过期、缺回执三个场景。",
+      "inputs": "固定合成夹具",
+      "outputs": "独立示例验收结果",
+      "metric": "健康通过；过期/缺项拒绝；真实账本样本数不变",
+      "status": "implemented",
+      "schedule": "用户提交时触发；未安装定时任务",
+      "recipient": "服务委托方与复核者",
+      "delivery": "页面展示与JSON下载",
+      "validation": "自动化边界用例；生产样本以观测账本为准"
+    }
+  ],
+  "agents": [
+    {
+      "id": "AG-01",
+      "name": "服务探测",
+      "role": "固定端点与真实RPC采集",
+      "skill_ids": [
+        "TRUST-001",
+        "TRUST-002",
+        "TRUST-003"
+      ],
+      "executor": "确定性Python工具职责；未连接大模型",
+      "trigger": "事件触发"
+    },
+    {
+      "id": "AG-02",
+      "name": "交付验收",
+      "role": "链、时效、完整性和关联逐项检查",
+      "skill_ids": [
+        "TRUST-004",
+        "TRUST-005",
+        "TRUST-006"
+      ],
+      "executor": "确定性Python工具职责；未连接大模型",
+      "trigger": "事件触发"
+    },
+    {
+      "id": "AG-03",
+      "name": "选择与观测",
+      "role": "依据验收选择并去重保存服务记录",
+      "skill_ids": [
+        "TRUST-007",
+        "TRUST-008",
+        "TRUST-009"
+      ],
+      "executor": "确定性Python工具职责；未连接大模型",
+      "trigger": "事件触发"
+    },
+    {
+      "id": "AG-04",
+      "name": "证据复核",
+      "role": "共享证据、离线重放和独立示例",
+      "skill_ids": [
+        "TRUST-010",
+        "TRUST-011",
+        "TRUST-012"
+      ],
+      "executor": "确定性Python工具职责；未连接大模型",
+      "trigger": "事件触发"
+    }
+  ],
+  "harness": [
+    {
+      "id": "H-01",
+      "name": "固定来源",
+      "rule": "只允许公开allowlist端点及3种只读RPC方法；禁止任意URL和交易发送",
+      "status": "implemented"
+    },
+    {
+      "id": "H-02",
+      "name": "真实与模拟分离",
+      "rule": "live失败明确返回失败；demo不进入真实账本",
+      "status": "implemented"
+    },
+    {
+      "id": "H-03",
+      "name": "失败不选中",
+      "rule": "全部交付检查通过才可被选择；RPC错误、错链、过期或缺项均拒绝",
+      "status": "implemented"
+    },
+    {
+      "id": "H-04",
+      "name": "有界执行",
+      "rule": "单HTTP读取8秒/3MB；最多3笔回执；上传JSON≤512KB",
+      "status": "implemented"
+    },
+    {
+      "id": "H-05",
+      "name": "证据可重放",
+      "rule": "保留归一化证据与契约版本；修改检查结果后重算哈希仍不能通过规则重放",
+      "status": "implemented"
+    },
+    {
+      "id": "H-06",
+      "name": "去重不刷分",
+      "rule": "按provider+snapshot+规则版本+验收判定及失败项去重；无交付错误按5分钟错误桶及失败项去重，判定变化留档",
+      "status": "implemented"
+    },
+    {
+      "id": "H-07",
+      "name": "分母可见",
+      "rule": "公开本实例通过/拒绝/总数；无样本不造成功率",
+      "status": "implemented"
+    },
+    {
+      "id": "H-08",
+      "name": "身份与链上边界",
+      "rule": "无签名、跨主体验证、抗女巫、ERC-8004或链上登记；不以注册或哈希冒充能力证明",
+      "status": "implemented"
+    }
+  ],
+  "limitations": [
+    "本实例对固定提供商的观测，不是全网公共信誉、组织身份认证或抗女巫证明。",
+    "finalized、交易和回执来自公共RPC；未独立验证共识或RPC真实性。",
+    "SHA-256与规则重放证明内容内部一致，不能证明签名、独立验收或已上链。",
+    "展示服务响应、数据结构和本次交付，不由一次登记或少量样本推定全面能力。"
+  ],
+  "source_provenance": [
+    {
+      "title": "汉客松 S1 & ETH Wuhan 2026 选手手册",
+      "url": "https://tokenark.feishu.cn/docx/Vn3hdD7s6okrftx9583cYgganMg",
+      "relation": "赛题一；可以聚焦服务探测、验收、履约历史、聚合或抗刷分中的一项。注册不等于能力。"
+    },
+    {
+      "title": "LlamaRPC源站核验",
+      "checked_at": "2026-10-06T10:46:36Z",
+      "result": "官方浏览器打开来源站时Cloudflare526；禁用，不绕过TLS。"
+    }
+  ]
+}

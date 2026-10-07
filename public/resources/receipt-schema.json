@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jiangcheng-trust:receipt:1",
+  "title": "江城验真回执",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/observation"
+    },
+    {
+      "$ref": "#/$defs/run"
+    }
+  ],
+  "$defs": {
+    "observation": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "jiangcheng-trust/service-observation/1"
+        },
+        "mode": {
+          "enum": [
+            "live",
+            "synthetic_demo"
+          ]
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "receipt_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provider": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "enum": [
+                "publicnode",
+                "llama",
+                "demo"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        "contract": {
+          "const": {
+            "id": "ETH-READ-SERVICE",
+            "version": "1.0.0",
+            "name": "以太坊只读数据服务验收",
+            "chain_id": 1,
+            "block_tag": "finalized",
+            "max_age_seconds": 1800,
+            "sample_limit": 3,
+            "max_latency_ms": 16000,
+            "required_receipt_fields": [
+              "transactionHash",
+              "blockHash",
+              "blockNumber",
+              "status"
+            ]
+          }
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 120000
+        },
+        "snapshot": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "chain_id": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "block": {
+                  "type": "object",
+                  "properties": {
+                    "hash": {
+                      "type": "string",
+                      "pattern": "^0x[a-f0-9]{64}$"
+                    },
+                    "number": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "timestamp": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "tag": {
+                      "const": "finalized"
+                    },
+                    "transaction_count": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100000
+                    }
+                  },
+                  "required": [
+                    "hash",
+                    "number",
+                    "timestamp",
+                    "tag",
+                    "transaction_count"
+                  ],
+                  "additionalProperties": false
+                },
+                "transactions": {
+                  "type": "array",
+                  "maxItems": 3,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "hash": {
+                        "type": "string",
+                        "pattern": "^0x[a-f0-9]{64}$"
+                      },
+                      "block_hash": {
+                        "type": "string",
+                        "pattern": "^0x[a-f0-9]{64}$"
+                      },
+                      "block_number": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "hash",
+                      "block_hash",
+                      "block_number"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "receipts": {
+                  "type": "array",
+                  "maxItems": 3,
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "transaction_hash": {
+                            "type": "string",
+                            "pattern": "^0x[a-f0-9]{64}$"
+                          },
+                          "block_hash": {
+                            "type": "string",
+                            "pattern": "^0x[a-f0-9]{64}$"
+                          },
+                          "block_number": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "status": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "transaction_hash",
+                          "block_hash",
+                          "block_number",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "chain_id",
+                "block",
+                "transactions",
+                "receipts"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "collection_error": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "enum": [
+                    "rpc_unavailable",
+                    "rpc_timeout",
+                    "rpc_shape"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "observed": {
+                "type": "string"
+              },
+              "requirement": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "passed",
+              "observed",
+              "requirement"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "decision": {
+          "enum": [
+            "accepted",
+            "rejected"
+          ]
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "issued_at",
+        "receipt_hash",
+        "limitations",
+        "provider",
+        "contract",
+        "latency_ms",
+        "snapshot",
+        "collection_error",
+        "checks",
+        "accepted",
+        "decision"
+      ],
+      "additionalProperties": false
+    },
+    "run": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "jiangcheng-trust/probe-run/1"
+        },
+        "mode": {
+          "enum": [
+            "live",
+            "synthetic_demo"
+          ]
+        },
+        "issued_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "receipt_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requested_provider": {
+          "enum": [
+            "publicnode",
+            "llama",
+            "auto",
+            "demo"
+          ]
+        },
+        "selected_provider": {
+          "enum": [
+            "publicnode",
+            "llama",
+            "demo",
+            null
+          ]
+        },
+        "decision": {
+          "enum": [
+            "accepted",
+            "rejected"
+          ]
+        },
+        "attempts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/observation"
+          }
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "observed": {
+                "type": "string"
+              },
+              "requirement": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "passed",
+              "observed",
+              "requirement"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "issued_at",
+        "receipt_hash",
+        "limitations",
+        "requested_provider",
+        "selected_provider",
+        "decision",
+        "attempts",
+        "checks"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "description": "结构规格；/api/verify额外执行固定契约、摘要及关联与时效规则重放。不是签名、身份或RPC真实性证明。"
+}
