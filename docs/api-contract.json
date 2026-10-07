@@ -1,0 +1,123 @@
+{
+  "project": "江城验真",
+  "version": "1.0.0",
+  "basePath": "/agent-trust/api",
+  "localPort": 8774,
+  "errors": {
+    "shape": {
+      "error": "可读错误说明"
+    },
+    "400": "无效参数",
+    "403": "Origin或Host不允许",
+    "413": "请求过大",
+    "429": "已有探测进行中",
+    "503": "请求的提供商未启用"
+  },
+  "endpoints": {
+    "GET /api/health": {
+      "response": {
+        "ok": true,
+        "project": "江城验真",
+        "version": "1.0.0"
+      }
+    },
+    "GET /api/catalog": {
+      "response": {
+        "project": "江城验真",
+        "providers": "provider[] (id,name,url,enabled)",
+        "contracts": "contract[]",
+        "skills": "skill[]",
+        "agents": "agent[]",
+        "harness": "rule[]",
+        "limitations": "string[]"
+      }
+    },
+    "POST /api/probe": {
+      "request": {
+        "provider_id": "publicnode | llama | auto"
+      },
+      "response": "ProbeRun; 实时失败仍返回200和decision=rejected，并记录失败观测；HTTP错误仅用于请求限制。auto按顺序尝试，首个accepted后停止。"
+    },
+    "GET /api/records": {
+      "response": {
+        "scope": "single_instance_observations",
+        "records": "Observation[] 最近100条，每条额外包含id、recorded_at、receipt（纯回执，供下载及verify）；不要把含元数据的整个列表条目送verify",
+        "stats": {
+          "total": "去重后的总记录数",
+          "accepted": "通过数",
+          "rejected": "未通过数",
+          "providers": "每个提供商{id,name,total,accepted,rejected,acceptance_rate,average_latency_ms,last_observed_at}"
+        },
+        "limitations": "string[]"
+      }
+    },
+    "POST /api/demo": {
+      "request": {
+        "scenario": "healthy | stale | missing"
+      },
+      "response": "ProbeRun; mode=synthetic_demo，绝不写入真实观测账本。"
+    },
+    "POST /api/verify": {
+      "request": {
+        "receipt": "ProbeRun或Observation完整对象"
+      },
+      "response": {
+        "valid": true,
+        "receipt_hash_valid": true,
+        "rules_replay_valid": true,
+        "authenticity_verified": false,
+        "chain_requeried": false,
+        "note": "只检验摘要与规则重放，不验证身份或RPC真实性"
+      }
+    }
+  },
+  "types": {
+    "ProbeRun": {
+      "schema": "jiangcheng-trust/probe-run/1",
+      "mode": "live | synthetic_demo",
+      "issued_at": "UTC ISO8601",
+      "requested_provider": "publicnode | llama | auto | demo",
+      "selected_provider": "通过的provider_id或null",
+      "decision": "accepted | rejected",
+      "attempts": "Observation[]",
+      "checks": "最后一次观测的check[]",
+      "receipt_hash": "SHA256无本字段的排序紧凑UTF8 JSON",
+      "limitations": "string[]"
+    },
+    "Observation": {
+      "schema": "jiangcheng-trust/service-observation/1",
+      "mode": "live | synthetic_demo",
+      "issued_at": "UTC ISO8601",
+      "provider": {
+        "id": "publicnode | llama | demo",
+        "name": "服务名称",
+        "url": "固定RPC或null"
+      },
+      "contract": {
+        "id": "ETH-READ-SERVICE",
+        "version": "1.0.0"
+      },
+      "latency_ms": "整数",
+      "snapshot": "归一化链ID、区块及交易回执；读取失败为null",
+      "collection_error": "null或{code,message}",
+      "checks": "{id,label,passed,observed,requirement}[]",
+      "accepted": "boolean",
+      "decision": "accepted | rejected",
+      "receipt_hash": "SHA256",
+      "limitations": "string[]"
+    }
+  },
+  "rules": [
+    "GET records仅包含本实例实际观测；不声明全球公共信誉",
+    "demo不计入真实样本",
+    "同provider+snapshot+ruleversion+验收判定及失败项去重；同结果重复不增加样本，通过变过期或超时仍留档",
+    "无交付错误按provider+错误类型+5分钟时间桶+验收失败项去重",
+    "单一服务表现不能证明组织身份、能力或抗女巫",
+    "验收失败保持失败；不得静默改用demo",
+    "每提供商30秒缓存；缓存原始采集时点，重复返回不会伪造新证据或增加样本。"
+  ],
+  "providers": {
+    "publicnode": "已启用，实时探测",
+    "llama": "禁用：官方浏览器发现来源站526证书异常，待核验。auto只遍历已启用列表。"
+  }
+}

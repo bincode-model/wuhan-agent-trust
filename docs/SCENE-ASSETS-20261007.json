@@ -1,0 +1,72 @@
+{
+  "tool": "Codex built-in image_gen",
+  "model_version": "Not exposed by tool; not asserted as Images 2.5",
+  "purpose": "AI行业意境图，不是实拍或真实执行证据",
+  "source_prompt": "用户提示词2/3；阳光清晰有生命力的行业场景；同构图双层光圈",
+  "assets": [
+    {
+      "path": "media/scene-base.webp",
+      "source": "exec-c04096b4-5ac6-45df-a533-4cbd98569f8b.png",
+      "source_sha256": "e38ea7154a02f4ce801caea4785ca7662f847f256fe95826ef2320f83f19858b",
+      "sha256": "443a0c81f6c4fa21c821217d9b9c37423846b48978d1af0212ceed440de934c1",
+      "width": 1672,
+      "height": 941,
+      "bytes": 119386
+    },
+    {
+      "path": "media/scene-base-mobile.webp",
+      "source": "exec-c04096b4-5ac6-45df-a533-4cbd98569f8b.png",
+      "source_sha256": "e38ea7154a02f4ce801caea4785ca7662f847f256fe95826ef2320f83f19858b",
+      "sha256": "89a91f2e674a4b960b46bdccd50c0d63cd5aa55715b19d3eae6a7741b1d76e25",
+      "width": 960,
+      "height": 540,
+      "bytes": 58456
+    },
+    {
+      "path": "media/scene-reveal.webp",
+      "source": "exec-47ded2d6-5146-4487-9a72-95aa67f208f6.png",
+      "source_sha256": "a132337ab0388d5f5a7e5cd26c70fca74d8c696132dbdfe2c07a45a9a5ab17d3",
+      "sha256": "7a138c5434dd768fa650a1dcf14f6b627238e22786c7513ef2187e748fb3fc47",
+      "width": 1672,
+      "height": 941,
+      "bytes": 144294
+    },
+    {
+      "path": "media/scene-reveal-mobile.webp",
+      "source": "exec-47ded2d6-5146-4487-9a72-95aa67f208f6.png",
+      "source_sha256": "a132337ab0388d5f5a7e5cd26c70fca74d8c696132dbdfe2c07a45a9a5ab17d3",
+      "sha256": "ffa7dc51800cf0b100465d0bf90f9827fd3a8c3ddf235f0f2f87206e47566141",
+      "width": 960,
+      "height": 540,
+      "bytes": 69228
+    }
+  ],
+  "video_source": "User supplied prompt2.txt; downloaded with official CUA Chrome UI, encoded locally with FFmpeg. Visual reference media, not actual project execution.",
+  "video_assets": [
+    {
+      "path": "media/orbit-scene-01.mp4",
+      "sha256": "e2d1d9b8805e661bd0393817630296b6e99315646462ac5df9c7b336098e06bd",
+      "bytes": 1648739,
+      "source_sha256": "0e1f6d8e102df5bcbde09c4b1175a6c532fe3a1bc85cf44b834619523c074ba0",
+      "encoding": "H.264 yuv420p, 1440 px wide, CRF 23, keyframe every 24 frames, faststart, no audio",
+      "source_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_190803_f5595254-156c-4d10-ad09-51a56eb4bc1e.mp4"
+    },
+    {
+      "path": "media/orbit-scene-02.mp4",
+      "sha256": "d098b30fa9bc468dd4e315e1476d0b02a42166e0dc62676912b2da3de077d319",
+      "bytes": 1661689,
+      "source_sha256": "47ad0e171ae8508384340caa3efb264fc5c6b32fa846f5f9d950944c36b3b325",
+      "encoding": "H.264 yuv420p, 1440 px wide, CRF 23, keyframe every 24 frames, faststart, no audio",
+      "source_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_204728_2dbcd1c4-63bc-4779-b06c-b7e2d5788ea7.mp4"
+    },
+    {
+      "path": "media/orbit-scene-03.mp4",
+      "sha256": "4fa6428d16adb70671bc06321283a32759c8487faa7e405e42adefe9d3f0985c",
+      "bytes": 1647875,
+      "source_sha256": "7530762f73df890b6cdad0d473ad80bf260d9fe90e89a835686abb130f5ed2bc",
+      "encoding": "H.264 yuv420p, 1440 px wide, CRF 23, keyframe every 24 frames, faststart, no audio",
+      "source_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_210050_14d4d9cf-782b-4f6f-9764-08d793cf427c.mp4"
+    }
+  ],
+  "scroll_video": "orbit-scene-03.mp4; prompt3 original contains credit-card branding, replaced with prompt2 neutral technology imagery while retaining scroll-scrub interaction"
+}
